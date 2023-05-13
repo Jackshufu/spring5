@@ -35,7 +35,7 @@ import org.slf4j.spi.LocationAwareLogger;
  * @since 5.1
  */
 final class LogAdapter {
-
+	// log4j2jar包当中的类
 	private static final String LOG4J_SPI = "org.apache.logging.log4j.spi.ExtendedLogger";
 
 	private static final String LOG4J_SLF4J_PROVIDER = "org.apache.logging.slf4j.SLF4JProvider";
@@ -47,8 +47,12 @@ final class LogAdapter {
 
 	private static final LogApi logApi;
 
+	// logApi 借用这个静态块实例化出来的
 	static {
 		if (isPresent(LOG4J_SPI)) {
+			// 这个if难理解
+			// isPresent(LOG4J_SLF4J_PROVIDER) 添加的桥接器
+			// isPresent(SLF4J_SPI)  加了SLF4J依赖包
 			if (isPresent(LOG4J_SLF4J_PROVIDER) && isPresent(SLF4J_SPI)) {
 				// log4j-to-slf4j bridge -> we'll rather go with the SLF4J SPI;
 				// however, we still prefer Log4j over the plain SLF4J API since
@@ -57,6 +61,7 @@ final class LogAdapter {
 			}
 			else {
 				// Use Log4j 2.x directly, including location awareness support
+				// 证明是优先使用log4j2打印日志的
 				logApi = LogApi.LOG4J;
 			}
 		}
@@ -85,10 +90,13 @@ final class LogAdapter {
 	 */
 	public static Log createLog(String name) {
 		switch (logApi) {
+			// log4j2
 			case LOG4J:
 				return Log4jAdapter.createLog(name);
+			// slf4j_full
 			case SLF4J_LAL:
 				return Slf4jAdapter.createLocationAwareLog(name);
+			// slf4j
 			case SLF4J:
 				return Slf4jAdapter.createLog(name);
 			default:
@@ -98,6 +106,7 @@ final class LogAdapter {
 				// case of Log4j or SLF4J, we are trying to prevent early initialization
 				// of the JavaUtilLog adapter - e.g. by a JVM in debug mode - when eagerly
 				// trying to parse the bytecode for all the cases of this switch clause.
+				// jul
 				return JavaUtilAdapter.createLog(name);
 		}
 	}

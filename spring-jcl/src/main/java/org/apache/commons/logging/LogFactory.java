@@ -64,6 +64,7 @@ public abstract class LogFactory {
 	 * @param name logical name of the <code>Log</code> instance to be returned
 	 */
 	public static Log getLog(String name) {
+		// 创建具体的日志对象 可能是log4j1,log4j2,logback的任意一个
 		return LogAdapter.createLog(name);
 	}
 

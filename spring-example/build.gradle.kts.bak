@@ -1,0 +1,45 @@
+/*
+plugins {
+	id("java")
+}
+
+group = "org.springframework"
+version = "5.2.19.RELEASE"
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+	// 这里的引用依赖不是自己本地编译好的源码
+	//	implementation group: 'org.springframework', name: 'spring-context', version: '5.2.18.RELEASE'
+	// 如何引用项目内的module,借鉴源码内module相互依赖
+	optional(project(":spring-context"))
+	// logback+slf4j
+	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+//	implementation group: 'ch.qos.logback', name: 'logback', version: '0.5'
+	compile("org.slf4j:slf4j-api")
+//	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12' // lombok
+*/
+/*
+	// 连接池
+	compile(project(":spring-jdbc"))
+	// mysql
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+	// mybatis的核心依赖
+	implementation group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
+	// mybatis和spring的插件包
+	implementation group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.5'
+	// junit
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
+*//*
+
+
+}
+
+tasks.getByName<Test>("test") {
+	useJUnitPlatform()
+}*/
