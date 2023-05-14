@@ -10,9 +10,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public class H {
 
+	// 实例化J的时候，有一个推断构造方法的过程
+	// 位置：org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors
 	class J{
 		public J(H h){
-
+			// spring的机制，假设没有任何构造方法，推断出来的构造方法为 空
 		}
 	}
 	public static void main(String[] args) {

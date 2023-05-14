@@ -204,6 +204,7 @@ public abstract class BeanUtils {
 						argsWithDefaultValues[i] = args[i];
 					}
 				}
+				// 拿到构造方法，通过反射调用newInstance方法来实例化bean
 				return ctor.newInstance(argsWithDefaultValues);
 			}
 		}
