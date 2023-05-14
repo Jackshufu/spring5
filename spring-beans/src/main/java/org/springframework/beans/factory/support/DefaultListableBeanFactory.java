@@ -1224,6 +1224,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
+				// 查找依赖的对象
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
 			return result;
@@ -1240,7 +1241,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (shortcut != null) {
 				return shortcut;
 			}
-
+			// 获取依赖的类型
 			Class<?> type = descriptor.getDependencyType();
 			Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
 			if (value != null) {
@@ -1262,24 +1263,40 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 
+			// 查找
+			/**
+			 * resolveMultipleBeans 解析当前依赖项是否支持多个bean注入，比如 List
+			 * 如果是能够支持多个注入则在该方法内部就完成了bean的查找，否则走下面逻辑完成查找
+			 * */
 			Object multipleBeans = resolveMultipleBeans(descriptor, beanName, autowiredBeanNames, typeConverter);
 			if (multipleBeans != null) {
 				return multipleBeans;
 			}
 
+			/**
+			 * 完成查找的功能，有可能会查找出来多个结果
+			 * 需要注意的是这里的多个结果和上面的支持多个注入不是一回事
+			 * */
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (matchingBeans.isEmpty()) {
+				// 如果没有找到，而我们在依赖上面加了必须的条件，则会出异常
 				if (isRequired(descriptor)) {
 					raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);
 				}
+				// 如果没有加必须条件，则返回null，意思是不注入任何对象
 				return null;
 			}
 
 			String autowiredBeanName;
 			Object instanceCandidate;
 
+			// 找出来多个
 			if (matchingBeans.size() > 1) {
+				// 通过descriptor 依赖描述器来推断需要注入的这个对象的名字
+				// 不是当前注入对象的名字，而是需要注入的对象的名字
+				// 假设A依赖B，这里推断B这个对象应该叫什么名字
 				autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
+				// 假设推断出来为null,即提供的名字和找出来的对象的名字不匹配
 				if (autowiredBeanName == null) {
 					if (isRequired(descriptor) || !indicatesMultipleBeans(type)) {
 						return descriptor.resolveNotUnique(descriptor.getResolvableType(), matchingBeans);
@@ -1291,6 +1308,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						return null;
 					}
 				}
+				// 通过名字，获取对象
 				instanceCandidate = matchingBeans.get(autowiredBeanName);
 			}
 			else {
@@ -1306,6 +1324,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (instanceCandidate instanceof Class) {
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
+			// 这里才实例化
 			Object result = instanceCandidate;
 			if (result instanceof NullBean) {
 				if (isRequired(descriptor)) {
@@ -1352,6 +1371,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (componentType == null) {
 				return null;
 			}
+			// findAutowireCandidates 根据类型查找
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, componentType,
 					new MultiElementDescriptor(descriptor));
 			if (matchingBeans.isEmpty()) {
@@ -1469,7 +1489,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 */
 	protected Map<String, Object> findAutowireCandidates(
 			@Nullable String beanName, Class<?> requiredType, DependencyDescriptor descriptor) {
-
+		// 通过类型找出来有多少符合条件的bean的名字
 		String[] candidateNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 				this, requiredType, true, descriptor.isEager());
 		Map<String, Object> result = new LinkedHashMap<>(candidateNames.length);
@@ -1511,6 +1531,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 		}
+		// key  name  value class对应的名字，而不是对象（spring还没有实例化bean，可以提高效率）
 		return result;
 	}
 
@@ -1557,6 +1578,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			return priorityCandidate;
 		}
 		// Fallback
+		// 匹配得上，就返回，唯一的，所以就不再遍历了
 		for (Map.Entry<String, Object> entry : candidates.entrySet()) {
 			String candidateName = entry.getKey();
 			Object beanInstance = entry.getValue();

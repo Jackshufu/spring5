@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "e")
 public class A implements ExampleAware {
 
+	//  A,B,C三个类根据 com/test/autoModel/config/ModelConfig.java:6扫描到spring容器当中
 	ExampleBean exampleBean;
 
 	public A(){
