@@ -1405,9 +1405,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				autowiredBeanNames.addAll(matchingBeans.keySet());
 			}
 			TypeConverter converter = (typeConverter != null ? typeConverter : getTypeConverter());
+			// map转List
 			Object result = converter.convertIfNecessary(matchingBeans.values(), type);
 			if (result instanceof List) {
 				if (((List<?>) result).size() > 1) {
+					// 根据@Order排序
 					Comparator<Object> comparator = adaptDependencyComparator(matchingBeans);
 					if (comparator != null) {
 						((List<?>) result).sort(comparator);
