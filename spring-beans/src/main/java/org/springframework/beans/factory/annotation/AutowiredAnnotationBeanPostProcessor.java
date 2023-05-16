@@ -128,7 +128,7 @@ import org.springframework.util.StringUtils;
  * @see Autowired
  * @see Value
  */
-// 这个BeanPostProcessor能够处理加了@Autowired注解的类
+// 这个BeanPostProcessor能够处理加了@Autowired注解的类，和对应的属性注入
 public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter
 		implements MergedBeanDefinitionPostProcessor, PriorityOrdered, BeanFactoryAware {
 
@@ -393,8 +393,13 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		return (candidateConstructors.length > 0 ? candidateConstructors : null);
 	}
 
+	//	完成属性注入的方法
 	@Override
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
+		/**
+		 * 根据当前bean，查找出来所有加了 @Autowired的属性
+		 * 然后根据这些属性实例化一些（有几个属性/方法加了 @Autowired）注入器
+		 * */
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
 			metadata.inject(bean, beanName, pvs);
@@ -470,7 +475,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 		do {
 			final List<InjectionMetadata.InjectedElement> currElements = new ArrayList<>();
-
+			// 拿到类，遍历所有属性
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
 				MergedAnnotation<?> ann = findAutowiredAnnotation(field);
 				if (ann != null) {
@@ -481,6 +486,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 						return;
 					}
 					boolean required = determineRequiredStatus(ann);
+					// 找到一个加了@Autowired方法的，就会放入集合中
 					currElements.add(new AutowiredFieldElement(field, required));
 				}
 			});
