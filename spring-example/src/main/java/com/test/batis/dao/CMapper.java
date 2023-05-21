@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 import java.util.Map;
 
-public interface TMapper {
+public interface CMapper {
 	// 这个mapper是mybatis产生的
 
 	@Select("select * from t")

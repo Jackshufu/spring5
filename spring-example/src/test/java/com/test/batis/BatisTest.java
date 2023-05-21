@@ -1,7 +1,9 @@
 package com.test.batis;
 import com.test.batis.bean.X;
 import com.test.batis.config.BatisConfig;
+import com.test.batis.dao.AMapper;
 import com.test.batis.dao.TMapper;
+import com.test.batis.service.AService;
 import com.test.batis.service.TService;
 import com.test.batis.mybatis.MySqlSession;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +61,7 @@ public class BatisTest {
 //
 //		//对象 本来是一个接口
 //		//有可能完成了 TMapper接口的实例化
-//		//动态代理
+//		//动态代理 -- 精华。JDK动态代理产生一个mapper对象
 //		TMapper mapper = sqlSession.getMapper(TMapper.class);
 //		//queryFroMap?
 //		Map<String, Object> resultMap = mapper.queryFroMap(1);
@@ -106,6 +108,67 @@ public class BatisTest {
 	}
 
 	@Test
+	public void EasyMyFactoryBeanCustomObjectBatis(){
+		//一定要mybatis产生？
+		//只有他自己知道要干什么事情
+		AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext(BatisConfig.class);
+
+		AService service = context.getBean(AService.class);
+		service.queryFroList();
+
+
+		/*AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext(BatisConfig.class);
+
+		AService service = context.getBean(AService.class);
+		service.queryFroList();*/
+	}
+
+	// spring api
+	@Test
+	public void SpringAPICustomObjectBatis(){
+		//一定要mybatis产生？
+		//只有他自己知道要干什么事情
+		AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext();
+		TMapper mapper = (TMapper) MySqlSession.getMapper(TMapper.class);
+		context.register(BatisConfig.class);
+		context.getBeanFactory().registerSingleton("t",mapper);
+		context.refresh();
+
+		AService service = context.getBean(AService.class);
+		service.queryFroList();
+
+
+		/*AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext(BatisConfig.class);
+
+		AService service = context.getBean(AService.class);
+		service.queryFroList();*/
+	}
+
+
+	@Test
+	public void 测试factoryBean(){
+		//一定要mybatis产生？
+		//只有他自己知道要干什么事情
+		AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext(BatisConfig.class);
+
+
+		TService service = context.getBean(TService.class);
+		service.queryFroList();
+
+
+		/*AnnotationConfigApplicationContext context =
+				new AnnotationConfigApplicationContext(BatisConfig.class);
+
+		AService service = context.getBean(AService.class);
+		service.queryFroList();*/
+	}
+
+	@Test
 	public void beanDefinitionBatis(){
 		AnnotationConfigApplicationContext context =
 				new AnnotationConfigApplicationContext();
@@ -125,11 +188,11 @@ public class BatisTest {
 
 //		TService bean = context.getBean(TService.class);
 //		bean.queryFroList();
-//		AMapper aMapper = (AMapper) context.getBean("amapper");
-//		aMapper.queryFroMap(1);
-//
-//		TMapper tMapper = (TMapper) context.getBean("tmapper");
-//		tMapper.queryFroList();
+		AMapper aMapper = (AMapper) context.getBean("amapper");
+		aMapper.queryFroMap(1);
+
+		TMapper tMapper = (TMapper) context.getBean("tmapper");
+		tMapper.queryFroList();
 //		Object d = context.getBean(X.class);
 	}
 

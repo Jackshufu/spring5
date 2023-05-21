@@ -1,5 +1,6 @@
 package com.test.batis.config;
 
+import com.test.batis.dao.CMapper;
 import com.test.batis.dao.TMapper;
 import com.test.batis.util.MyImportBeanDefinitionRegistart;
 import com.test.batis.mybatis.MySqlSession;
@@ -13,12 +14,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@Configuration
-@ComponentScan("com.test.batis")  //Spring的扫描
-@MapperScan("com.test.batis.dao")
+//@Configuration
+//@ComponentScan("com.test.batis")  //Spring的扫描
+//@MapperScan("com.test.batis.dao")
 //@ImportResource("classpath:spring-batis.xml")
 //@Import(MyImportBeanDefinitionRegistart.class)
-//@MyScan
+@MyScan
 public class BatisConfig {
 
 	@Bean
@@ -43,6 +44,12 @@ public class BatisConfig {
 //	@Bean
 //	public TMapper tMapper(){
 //		TMapper mapper = (TMapper) MySqlSession.getMapper(TMapper.class);
+//		return mapper;
+//	}
+
+//	@Bean
+//	public CMapper cMapper(){
+//		CMapper mapper = (CMapper) MySqlSession.getMapper(CMapper.class);
 //		return mapper;
 //	}
 }
