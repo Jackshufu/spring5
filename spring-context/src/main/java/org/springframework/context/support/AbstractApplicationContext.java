@@ -600,6 +600,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		// 交给其他容器来扩展的
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
@@ -897,6 +898,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		getLifecycleProcessor().onRefresh();
 
 		// Publish the final event.
+		// 观察者设计模式
 		publishEvent(new ContextRefreshedEvent(this));
 
 		// Participate in LiveBeansView MBean, if active.

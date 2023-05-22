@@ -63,6 +63,13 @@ public class ContextTest {
 
 	}
 
+	@Test
+	public void testAInit(){
+				AnnotationConfigApplicationContext
+				context = new AnnotationConfigApplicationContext(ContextConfig.class);
+		context.getBean(A.class).getC();
+
+	}
 
 	@Test
 	public void ignoreContext(){

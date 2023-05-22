@@ -220,9 +220,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	/**
 	 * Derive further bean definitions from the configuration classes in the registry.
+	 * 该方法完成了扫描
+	 * import的解析
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+		logger.debug("ccpp-s intern subclass postProcessBeanDefinitionRegistry");
 		int registryId = System.identityHashCode(registry);
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
@@ -243,6 +246,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+		logger.debug("ccpp-s intern parent postProcessBeanDefinitionRegistry");
 		int factoryId = System.identityHashCode(beanFactory);
 		if (this.factoriesPostProcessed.contains(factoryId)) {
 			throw new IllegalStateException(

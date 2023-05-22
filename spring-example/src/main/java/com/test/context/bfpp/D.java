@@ -28,6 +28,7 @@ public class D implements BeanDefinitionRegistryPostProcessor {
 //		AbstractBeanDefinition j = (AbstractBeanDefinition) registry.getBeanDefinition("j");
 //		j.setBeanClass(L.class);
 
+		// 该方法往beanDefinitionMap放数据
 		registry.registerBeanDefinition("e",e.getBeanDefinition());
 		registry.registerBeanDefinition("f",f.getBeanDefinition());
 

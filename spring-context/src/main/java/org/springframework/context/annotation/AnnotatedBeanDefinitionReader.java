@@ -66,6 +66,9 @@ public class AnnotatedBeanDefinitionReader {
 	 * in the form of a {@code BeanDefinitionRegistry}
 	 * @see #AnnotatedBeanDefinitionReader(BeanDefinitionRegistry, Environment)
 	 * @see #setEnvironment(Environment)
+	 *
+	 * BeanDefinition 渲染器
+	 * 1.根据一个类渲染一个beandefinition
 	 */
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry) {
 		this(registry, getOrCreateEnvironment(registry));

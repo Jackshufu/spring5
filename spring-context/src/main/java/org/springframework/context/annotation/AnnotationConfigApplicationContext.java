@@ -84,7 +84,13 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+		/**
+		 * 给beanFactory赋值，org.springframework.beans.factory.support.DefaultListableBeanFactory对象
+		 * */
 		this();
+		/**
+		 * componentClasses配置类
+		 * */
 		register(componentClasses);
 		refresh();
 	}
@@ -159,6 +165,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	@Override
 	public void register(Class<?>... componentClasses) {
 		Assert.notEmpty(componentClasses, "At least one component class must be specified");
+		// 类渲染成beandefinition
 		this.reader.register(componentClasses);
 	}
 
